@@ -45,6 +45,7 @@ const gameBoard = (() => {
         // by just returning, we can check if true or false
         // this can be used to stop the moving of turns on click
         return board[location].setMark(mark);
+        // TODO THEN DisplayController.loadBoard();
         //}
     }
 
@@ -59,6 +60,7 @@ const gameBoard = (() => {
     return {getBoard, markBoard, getSquare, square};
 })();
 
+// is this safe?
 const theGameBoard = gameBoard;
 
 // displayController module
@@ -71,17 +73,23 @@ const displayController = (() => {
     const loadBoard = () => {
         boardContainer.innerHTML = "";
 
+        // TODO why does this make all of them "9"?
         for(z = 0; z < 9; z++) {
+            let str = "square-";
             let div = document.createElement("div");
-            div.addEventListener("click", function() {
-                currentLocation = z;
-                console.log("clicked " + z);
-            });
-                
+            div.classList.add("square");
+            div.setAttribute("id", str.concat(z));
             let span = document.createElement("span");
             boardContainer.appendChild(div).appendChild(span).append(theGameBoard.getBoard()[z].getMark());
-            
         }
+        // add event listeners later
+        const squares = document.querySelectorAll(".square");
+        squares.forEach(element => {
+            element.addEventListener("click", function(){
+                console.log("Clicked: " + element.id);
+
+            });
+        })
     }
     return {loadBoard, boardContainer};
 })();
@@ -89,11 +97,12 @@ const displayController = (() => {
 // player factory with score, marker(?), winlose(?) 
 const player = (id, marker, name) => {
     const testFunction = () => console.log('player ' + name + ' ready!');
-    /*
-    const markBoard = () => {
-        gameBoard.markBoard(marker);
+    
+    const markBoard = (event) => {
+        theGameBoard.markBoard(marker, event);
+        displayController.loadBoard();
     }
-    */
+    
     
     return {id, marker, name, testFunction};    
 };
@@ -101,7 +110,8 @@ const player = (id, marker, name) => {
 
 // turn handler?
 const turnHandler = ((player) => {
-    
+    // during the turn, click, then reload board through displayController
+        
 })();
 
 // load the board
