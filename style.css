@@ -1,0 +1,33 @@
+body, p, span {
+    font-family: 'Roboto', 'sans-serif';
+}
+
+header {
+    display: flex;
+    justify-content: center;
+}
+
+#gameBoard {
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    min-height: 500px;
+}
+
+#gameBoard > div {
+    border: 1px solid black;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    text-transform: uppercase;
+}
+
+.btn {
+    padding: .75rem 2rem;
+    font-weight: 700;    
+}
+
+.uppercase {
+    text-transform: capitalize;
+}
