@@ -9,38 +9,43 @@ const gameBoard = (() => {
     // create a square object?
     // might be useful later, think react
     const square = (mark, color, isFilled) => {
-        const setMark = (mark) => {
-            this.mark = mark;
+        const setMark = (theMark) => {
+            if(isFilled) {
+                return false;
+            } else {
+                mark = theMark;
+                isFilled = true;
+                return true;
+            }
         }
-        const setColor = (color) => {
-            this.color = color;   
+        const getMark = () => {
+            return mark;
         }
+        const setColor = (theColor) => {
+            color = theColor;   
+        }
+        // TODO may not need this
         const checkFilled = () => {
             return isFilled === true;
         }
-        return {setMark, setColor, checkFilled, mark, color}
+        return {setMark, setColor, checkFilled, getMark, color}
     }
 
+    // fill the board with square objects that we can later update
     const fillBoard = (() => {
         for (i = 0; i < board.length; i++) {
-            let newSquare = square("X", "green", false);
+            let newSquare = square("", "green", false);
             board[i] = newSquare;
         }
     })();
 
     // setters and getters public
     const markBoard = (mark, location) => {
-        if(isFillable(location)) {
-            board[location] = mark;
-        }
-    }
-
-    const isFillable = (index) => {
-        return isEmpty(board[index]);
-    }
-
-    const isEmpty = (item) => {
-        return textContent.trim() === "";
+        //if(isFillable(location)) {
+        // by just returning, we can check if true or false
+        // this can be used to stop the moving of turns on click
+        return board[location].setMark(mark);
+        //}
     }
 
     const getBoard = () => {
@@ -54,24 +59,27 @@ const gameBoard = (() => {
     return {getBoard, markBoard, getSquare, square};
 })();
 
-
+const theGameBoard = gameBoard;
 
 // displayController module
 // should render the contents of the gameboard array to the webpage
 const displayController = (() => {
     const boardContainer = document.getElementById("gameBoard");
-    const theBoard = gameBoard.getBoard();
+    // below was making a copy .. maybe no bueno?
+    //const theBoard = gameBoard.getBoard();
 
     const loadBoard = () => {
-        for(i = 0; i < 9; i++) {
+        boardContainer.innerHTML = "";
+
+        for(z = 0; z < 9; z++) {
             let div = document.createElement("div");
             div.addEventListener("click", function() {
-                currentLocation = i;
-                console.log("clicked " + i);
+                currentLocation = z;
+                console.log("clicked " + z);
             });
                 
             let span = document.createElement("span");
-            boardContainer.appendChild(div).appendChild(span).append(theBoard[i].mark);
+            boardContainer.appendChild(div).appendChild(span).append(theGameBoard.getBoard()[z].getMark());
             
         }
     }
