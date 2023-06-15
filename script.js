@@ -86,8 +86,15 @@ const displayController = (() => {
         const squares = document.querySelectorAll(".square");
         squares.forEach(element => {
             element.addEventListener("click", function(){
-                console.log("Clicked: " + element.id);
-
+                console.log("Clicked: " + this.id);
+                const location = this.id.slice(-1);
+                console.log("The ID is: " + location);
+                
+                if(theGameBoard.markBoard("X", location)) {
+                    loadBoard();
+                } else {
+                    console.log("Spot filled");
+                };
             });
         })
     }
