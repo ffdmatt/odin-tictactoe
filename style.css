@@ -1,16 +1,28 @@
+:root {
+    --primary: #f9d353;
+}
+
 body, p, span {
     font-family: 'Roboto', 'sans-serif';
 }
 
-header {
+header, main {
     display: flex;
     justify-content: center;
+}
+
+header {
+    background-color: var(--primary);
+    padding: .5rem 1rem;
+    margin-bottom: 2rem;
 }
 
 #gameBoard {
     display: grid;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
     min-height: 500px;
+    max-width: 700px;
+    min-width: min(100%, 600px);
 }
 
 #gameBoard > div {

@@ -62,7 +62,7 @@ const gameBoard = (() => {
 
 // is this safe?
 const theGameBoard = gameBoard;
-let currentTurn = 0;
+let currentTurn = 1;
 
 // player factory with score, marker(?), winlose(?) 
 const player = (id, marker, name) => {
@@ -221,7 +221,7 @@ const checkGameOver = (() => {
         //    theBoard[2] == theBoard[5] == theBoard[8]);
         // loop 3 times
         // each time start at 0, 1, and 2 (n+1)
-        for(i = 0; i < 9; i++) {
+        for(i = 0; i < 3; i++) {
             // inner loop moves 3 steps n + 3
             if(theBoard[i].checkFilled()) {
                 if(theBoard[i].getMark() == theBoard[i + 3].getMark() 
