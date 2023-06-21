@@ -49,6 +49,14 @@ const gameBoard = (() => {
         //}
     }
 
+    const resetBoard = () => {
+        for (i = 0; i < board.length; i++) {
+            let newSquare = square("", "green", false);
+            board[i] = newSquare;
+        }
+        currentTurn = 0;
+    }
+
     const getBoard = () => {
         return board;
     }
@@ -57,12 +65,12 @@ const gameBoard = (() => {
         return board[i];
     }
 
-    return {getBoard, markBoard, getSquare, square};
+    return {getBoard, markBoard, resetBoard, getSquare, square};
 })();
 
 // is this safe?
 const theGameBoard = gameBoard;
-let currentTurn = 1;
+let currentTurn = 0;
 
 // player factory with score, marker(?), winlose(?) 
 const player = (id, marker, name) => {
@@ -77,19 +85,32 @@ const player = (id, marker, name) => {
     const getName = () => {
         return name;
     }
+
+    const setName = (n) => {
+        name = n;
+    }
     
-    return {getId, getMarker, getName, testFunction};    
+    return {getId, getMarker, getName, testFunction, setName};    
 };
 
 
 const gameHandler = (() => {
 
     // create two players
-    const player1 = player(0, "X", "Matt");
-    const player2 = player(1, "O", "John");
+    const player1 = player(0, "X", "Player 1");
+    const player2 = player(1, "O", "Player 2");
 
     // add to array
     const players = [player1, player2];
+
+    const setPlayers = (p1, p2) => {
+        players[0].setName(p1);
+        players[1].setName(p2);
+    }
+
+    const getWinnerName = () => {
+        return players[currentTurn % 2].getName();
+    }
 
     // start at player 1
     //currentTurn = 1;
@@ -98,7 +119,7 @@ const gameHandler = (() => {
         return players[currentTurn % 2].getMarker();
     }
 
-    return {checkTurn};
+    return {checkTurn, setPlayers, getWinnerName};
 
 })();
 
@@ -112,7 +133,7 @@ const displayController = (() => {
     const loadBoard = () => {
         boardContainer.innerHTML = "";
 
-        // TODO why does this make all of them "9"?
+        
         for(z = 0; z < 9; z++) {
             let str = "square-";
             let div = document.createElement("div");
@@ -132,13 +153,20 @@ const displayController = (() => {
                 // this works, but should it be elsewhere?
                 if(theGameBoard.markBoard(gameHandler.checkTurn(), location)) {
                     loadBoard();
-                    if (currentTurn > 4) {
+                    if (currentTurn > 3) {
                         switch(checkGameOver.gameCheck()) {
                             case 0:
                                 console.log("You Win!");
+                                //alert(gameHandler.checkTurn() + " wins! Congratulations " + gameHandler.getWinnerName());
+                                modalController.showWinnerModal();
+                                disableBoard();
+                                // will need to have another function like pause game
                                 break;
                             case 1:
                                 console.log("Game Over, it's a tie!");
+                                alert("It's a tie! Please Restart");
+                                disableBoard();
+                                // same here
                                 break;
                             case 2:
                                 console.log("No Winner Found, Game Resumes");
@@ -154,7 +182,21 @@ const displayController = (() => {
             });
         })
     }
-    return {loadBoard};
+    const disableBoard = () => {
+        const squares = document.querySelectorAll(".square");
+        squares.forEach(element => {
+            element.classList.add("disabled");
+        });
+    }
+
+    const enableBoard = () => {
+        const squares = document.querySelectorAll(".square");
+        squares.forEach(element => {
+            element.classList.remove("disabled");
+        });
+    }
+
+    return {loadBoard, disableBoard, enableBoard};
 })();
 
 
@@ -250,3 +292,91 @@ const checkGameOver = (() => {
     }
     return {gameCheck};
 })();
+
+// modal controller
+
+const modalController = (() => {
+    const modal = document.getElementById('modal');
+    const winnerModal = document.getElementById('winner-modal');
+    const overlay = document.getElementById('modal-overlay');
+    const title = document.getElementById('modal-title');
+    const text = document.getElementById('modal-text');
+    const btn = document.getElementById('modal-button');
+    const form = document.getElementById('playerNames');
+    const inputPlayer1 = document.getElementById('player1Name');
+    const inputPlayer2 = document.getElementById('player2Name');
+    const player1NameDisplay = document.getElementById('player1NameDisplay');
+    const player2NameDisplay = document.getElementById('player2NameDisplay');
+
+    // TODO does this need to run like this? 
+    const init = (() => {
+        title.innerText = "New Game";
+        text.innerText = "Welcome to Tic Tac Toe! To begin, enter the names for players 1 and 2. When you're ready, select \"begin game!\""
+        btn.addEventListener("click", function(event){
+            event.preventDefault();
+            resetText();
+            getPlayerNames();
+            hideModal();
+            hideWinnerModal();
+        });
+    })();
+
+    const resetText = () => {
+        title.innerText = "New Game";
+        text.innerText = "Welcome to Tic Tac Toe! To begin, enter the names for players 1 and 2. When you're ready, select \"begin game!\""
+    }
+
+    const showModal = () => {
+        overlay.classList.add('show');
+    }
+
+    const hideModal = () => {
+        overlay.classList.remove('show');
+    }
+
+    const startGameModal = () => {
+        showModal();
+    }
+
+    const getPlayerNames = () => {
+        const player1Name = inputPlayer1.value;
+        const player2Name = inputPlayer2.value;
+        player1NameDisplay.innerText = player1Name;
+        player2NameDisplay.innerText = player2Name;
+        gameHandler.setPlayers(player1Name, player2Name);
+        return {player1Name, player2Name}
+    }
+
+    const showWinnerModal = () => {
+        winnerModal.classList.add('show');
+        winnerModal.innerText = gameHandler.checkTurn() + " wins! Congratulations " 
+            + gameHandler.getWinnerName() + ". If you'd like to play again, select \"Start Game.\"";
+    }
+
+    const hideWinnerModal = () => {
+        if(winnerModal.classList.contains('show'))  {
+            winnerModal.classList.remove('show');
+        }
+    }
+
+    showModal();
+
+    return {startGameModal, showWinnerModal, hideWinnerModal, player1Name, player2Name}
+
+})();
+
+const resetButton = (() => {
+    const button = document.getElementById('start');
+
+    const startGame = () => {
+        gameBoard.resetBoard();
+        displayController.loadBoard();
+        displayController.enableBoard();
+        modalController.startGameModal();
+    }
+
+    button.addEventListener("click", startGame);
+    
+    return {startGame}
+})();
+

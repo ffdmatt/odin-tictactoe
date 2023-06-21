@@ -13,11 +13,28 @@
 <body>
     <header>
         <nav>
-            <button class="btn btn-primary">Start Game</button>
+            <span id="player1NameDisplay">Player 1</span>
+            <button class="btn btn-secondary" id="start">Start Game</button>
+            <span id="player2NameDisplay">Player 2</span>
         </nav>
     </header>
     <main>
         <div class="gameBoard" id="gameBoard"></div>
+        <div class="winner-modal alert alert-success" id="winner-modal">Test</div>
+        <div class="modal-overlay" id="modal-overlay">
+            <div class="modal" id="modal">
+                <h3 class="modal-title" id="modal-title">Default Title</h3>
+                <p class="modal-text" id="modal-text">Default Text</p>
+                <form id="playerNames">
+                    <input type="text" id="player1Name" name="player1Name" placeholder="First Last">
+                    <label for="player1Name">Player 1 Name</label>
+                    <input type="text" name="player2Name" id="player2Name" placeholder="First Last">
+                    <label for="player2Name">Player 2 Name</label>
+                    <button class="btn btn-primary" id="modal-button">Begin Game</button>
+                </form>
+                
+            </div>
+        </div>
     </main>
 </body>
 <footer>

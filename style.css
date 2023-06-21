@@ -1,14 +1,56 @@
 :root {
     --primary: #f9d353;
+    --secondary: #9e7044;
+    --success: rgb(111, 219, 111);
+    --success-dark: rgb(37, 71, 37);
+    --base-font-size: 16px;
+    --font-family: 'Roboto', 'sans-serif';
 }
 
-body, p, span {
+body, p {
     font-family: 'Roboto', 'sans-serif';
+    font-size: var(--base-font-size);
+    line-height: calc(var(--base-font-size) * 1.65);
 }
+
+body {
+    background-color: #a236f5;
+}
+
+h1 {
+    font-size: calc(var(--base-font-size) * 2.15);
+}
+
+h2 {
+    font-size: calc(var(--base-font-size) * 1.75);
+}
+
+h3 {
+    font-size: calc(var(--base-font-size) * 1.5);
+}
+
+h4 {
+    font-size: calc(var(--base-font-size) * 1.25);
+}
+
+h5 {
+    font-size: calc(var(--base-font-size) * 1.15);
+}
+
+h6 {
+    font-size: calc(var(--base-font-size) * 1);
+}
+
 
 header, main {
     display: flex;
     justify-content: center;
+    align-content:center;
+    align-items: center;
+}
+
+main {
+    padding: 5%;
 }
 
 header {
@@ -17,12 +59,28 @@ header {
     margin-bottom: 2rem;
 }
 
+header nav {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    align-items: center;
+}
+
+header nav span {
+    justify-self: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-family: var(--font-family);
+}
+
 #gameBoard {
     display: grid;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
     min-height: 500px;
     max-width: 700px;
     min-width: min(100%, 600px);
+    background-color: white;
+    box-shadow: #00000021 6px 6px 16px 6px;
 }
 
 #gameBoard > div {
@@ -37,9 +95,92 @@ header {
 
 .btn {
     padding: .75rem 2rem;
-    font-weight: 700;    
+    font-weight: 700;
+    border: none;
+    border-radius: .25rem;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: white;
 }
 
 .uppercase {
     text-transform: capitalize;
+}
+
+.modal-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+}
+
+.modal-overlay.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: .25rem;
+}
+
+.square.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+form#playerNames {
+    display: grid;
+    gap: 1.5rem;
+}
+
+input{
+    padding: .5rem;
+    border-radius: .25rem;
+    border: 1px solid rgb(192, 192, 192);
+    font-size: 1.1rem;
+}
+
+label {
+    font-size: .8rem;
+    margin-top: -1.25rem;
+    color: #808080;
+}
+
+#winner-modal {
+    position: absolute;
+    bottom: 0;
+    display: none;
+}
+
+#winner-modal.show {
+    display: flex;
+    justify-content: center;
+}
+
+.alert {
+    padding: 1.5rem 1.25rem;
+    border-radius: .25rem;
+    min-width: 80%;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: var(--success);
+    border-color: var(--success-dark);
+    color: var(--success-dark);
 }
